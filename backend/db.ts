@@ -53,3 +53,5 @@ export function getChats(sessionId: number): Array<{
     created_at: string;
   }>;
 }
+
+export default db;
