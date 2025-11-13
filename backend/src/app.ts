@@ -32,6 +32,9 @@ app.get("/api/v1/add-session", (req: express.Request, res: express.Response) => 
 });
 
 app.post("/api/v1/chats", (req: express.Request, res: express.Response) => {
+  /**
+   * Accepts a chat, construct prompt, infer response, save to DB, return response
+   */
   const { sessionId, role, content } = req.body;
   if (!sessionId || !role || !content) {
     return res.status(400).json({ error: "Missing required fields: sessionId, role, or content" });
