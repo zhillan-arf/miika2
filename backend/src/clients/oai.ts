@@ -2,12 +2,10 @@
 import "dotenv/config";
 import { OpenAI } from "openai/client.js";
 
-
-// Interfaces
-
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const openai = new OpenAI();
 
+// Functions
 export async function infer(input: string): Promise<any[]> {
     /**
      * Infer the response from the input using the OpenAI API
