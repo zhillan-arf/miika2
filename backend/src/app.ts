@@ -1,4 +1,4 @@
-// backend/app.ts
+// backend/src/app.ts
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 import { readFileSync } from "fs";
@@ -22,39 +22,39 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // API endpoints
-app.get("/api/v1/hello", (req: express.Request, res: express.Response) => {
-  res.send("Hello World");
-});
+// app.get("/api/v1/hello", (req: express.Request, res: express.Response) => {
+//   res.send("Hello World");
+// });
 
-app.get("/api/v1/add-session", (req: express.Request, res: express.Response) => {
-  const sessionId = addSession();
-  res.json({ sessionId });
-});
+// app.get("/api/v1/add-session", (req: express.Request, res: express.Response) => {
+//   const sessionId = addSession();
+//   res.json({ sessionId });
+// });
 
-app.post("/api/v1/chats", (req: express.Request, res: express.Response) => {
-  /**
-   * Accepts a chat, construct prompt, infer response, save to DB, return response
-   */
-  const { sessionId, role, content } = req.body;
-  if (!sessionId || !role || !content) {
-    return res.status(400).json({ error: "Missing required fields: sessionId, role, or content" });
-  }
-  const chatId = addChat(sessionId, role, content);
-  res.json({ chatId });
-});
+// app.post("/api/v1/chats", (req: express.Request, res: express.Response) => {
+//   /**
+//    * Accepts a chat, construct prompt, infer response, save to DB, return response
+//    */
+//   const { sessionId, role, content } = req.body;
+//   if (!sessionId || !role || !content) {
+//     return res.status(400).json({ error: "Missing required fields: sessionId, role, or content" });
+//   }
+//   const chatId = addChat(sessionId, role, content);
+//   res.json({ chatId });
+// });
 
-app.get("/api/v1/chats/:sessionId", (req: express.Request, res: express.Response) => {
-  const sessionIdParam = req.params.sessionId;
-  if (!sessionIdParam) {
-    return res.status(400).json({ error: "Invalid sessionId" });
-  }
-  const sessionId = parseInt(sessionIdParam);
-  if (isNaN(sessionId)) {
-    return res.status(400).json({ error: "Invalid sessionId" });
-  }
-  const chats = getChats(sessionId);
-  res.json(chats);
-});
+// app.get("/api/v1/chats/:sessionId", (req: express.Request, res: express.Response) => {
+//   const sessionIdParam = req.params.sessionId;
+//   if (!sessionIdParam) {
+//     return res.status(400).json({ error: "Invalid sessionId" });
+//   }
+//   const sessionId = parseInt(sessionIdParam);
+//   if (isNaN(sessionId)) {
+//     return res.status(400).json({ error: "Invalid sessionId" });
+//   }
+//   const chats = getChats(sessionId);
+//   res.json(chats);
+// });
 
 
 // Error handling middleware

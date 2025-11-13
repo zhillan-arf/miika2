@@ -1,4 +1,4 @@
-// backend/server.ts
+// backend/src/server.ts
 import "dotenv/config";
 import app from "./app.js";
 
