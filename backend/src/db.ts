@@ -1,11 +1,11 @@
 // backend/db.ts
-
+import "dotenv/config";
 import Database from "better-sqlite3";
 
-// Initialize database connection
-const db = new Database("database.db");
+const DB_PATH = process.env.DB_PATH || "database.db";
+const db = new Database(DB_PATH);
 
-// Create tables if they don't exist
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,12 +22,11 @@ db.exec(`
   );
 `);
 
-// Prepare statements for better performance
 const insertSession = db.prepare("INSERT INTO sessions (created_at) VALUES (datetime('now'))");
 const insertChat = db.prepare("INSERT INTO chats (session_id, role, content, created_at) VALUES (?, ?, ?, datetime('now'))");
 const selectChats = db.prepare("SELECT * FROM chats WHERE session_id = ? ORDER BY created_at ASC");
+    
 
-// Export functions
 export function addSession(): number {
   const result = insertSession.run();
   return Number(result.lastInsertRowid);
@@ -54,4 +53,6 @@ export function getChats(sessionId: number): Array<{
   }>;
 }
 
-export default db;
+export function closeDb(): void {
+  db.close();
+}

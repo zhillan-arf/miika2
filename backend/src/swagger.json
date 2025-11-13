@@ -1,0 +1,176 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Miika2 API",
+    "version": "1.0.0",
+    "description": "API documentation for Miika2 chat application"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/v1/hello": {
+      "get": {
+        "summary": "Hello World",
+        "description": "A simple hello world endpoint",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "example": "Hello World"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/add-session": {
+      "get": {
+        "summary": "Create a new session",
+        "description": "Creates a new chat session and returns the session ID",
+        "responses": {
+          "200": {
+            "description": "Session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "integer",
+                      "description": "The ID of the newly created session"
+                    }
+                  }
+                },
+                "example": {
+                  "sessionId": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chats": {
+      "post": {
+        "summary": "Add a chat message",
+        "description": "Adds a new chat message to a session",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["sessionId", "role", "content"],
+                "properties": {
+                  "sessionId": {
+                    "type": "integer",
+                    "description": "The ID of the session"
+                  },
+                  "role": {
+                    "type": "string",
+                    "description": "The role of the message sender (e.g., 'user', 'assistant')"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "The message content"
+                  }
+                }
+              },
+              "example": {
+                "sessionId": 1,
+                "role": "user",
+                "content": "Hello, how are you?"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Chat message added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatId": {
+                      "type": "integer",
+                      "description": "The ID of the newly created chat message"
+                    }
+                  }
+                },
+                "example": {
+                  "chatId": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chats/{sessionId}": {
+      "get": {
+        "summary": "Get chats for a session",
+        "description": "Retrieves all chat messages for a given session",
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the session"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of chat messages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "session_id": {
+                        "type": "integer"
+                      },
+                      "role": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "session_id": 1,
+                    "role": "user",
+                    "content": "Hello, how are you?",
+                    "created_at": "2024-01-01T12:00:00"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
