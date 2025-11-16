@@ -1,7 +1,6 @@
 // backend/src/oai.ts
 import "dotenv/config";
 import { OpenAI } from "openai/client.js";
-import type { ResponseInputItem } from 'openai/resources/responses/responses.mjs'
 import type { Message } from "../../schemas/message.js";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
@@ -14,7 +13,7 @@ const oaiClient = new OpenAI();
 export async function infer(inputs: Message[]): Promise<any> {
     /**
      * Infer the response from the input using the OpenAI API.
-     * Currently only supports text input.
+     * Currently only support text input.
      * @param - Structured OAI input (text or complex content)
      * @returns Structured OAI output (text or complex content)
      */
