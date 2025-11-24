@@ -1,10 +1,11 @@
 // backend/src/app.ts
 import express from "express";
 import swaggerUi from "swagger-ui-express";
+import swaggerAutogen from 'swagger-autogen';
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { addSession, addChat, getChats } from "./db.js";
+import { createSession, createChat, getChats } from "./db.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,15 +17,14 @@ const swaggerDocument = JSON.parse(
 // Initialize Express app 
 const app = express();
 
-// Middleware for JSON parsing and Swagger UI
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // API endpoints
-// app.get("/api/v1/hello", (req: express.Request, res: express.Response) => {
-//   res.send("Hello World");
-// });
+app.get("/api/v1/hello", (req: express.Request, res: express.Response) => {
+  res.send("Hello World");
+});
 
 // app.get("/api/v1/add-session", (req: express.Request, res: express.Response) => {
 //   const sessionId = addSession();

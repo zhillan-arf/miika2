@@ -42,7 +42,9 @@
     "skipLibCheck": true,
 
     // Other Options
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
   "include": ["src/**/*", "tests/**/*"]
 }

@@ -5,7 +5,7 @@ import type { Message } from "../../schemas/message.js";
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const OPENAI_MODEL = process.env.OPENAI_MODEL;
-const TIMEOUT_DURATION = 60000;
+const TIMEOUT_MS = 60000;
 
 // Error classes
 export class OAIError extends Error {
@@ -41,7 +41,7 @@ export class OAIServiceUnavailableError extends OAIError {
 }
 
 export class OAITimeoutError extends OAIError {
-    constructor(message: string = `Request timed out after ${TIMEOUT_DURATION}ms`) {
+    constructor(message: string = `Request timed out after ${TIMEOUT_MS}ms`) {
         super(message, "TIMEOUT");
         this.name = "OAITimeoutError";
     }
@@ -136,10 +136,10 @@ export async function infer(inputs: Message[]): Promise<Message[]> {
     /**
      * Infer the response from the input using the OpenAI API.
      * Currently only support text input.
-     * @param inputs - Structured OAI input (text or complex content)
-     * @returns Structured OAI output (text or complex content)
+     * @param inputs - Message array
+     * @returns Message array
      * @throws {OAICredentialsError} When credentials are invalid
-     * @throws {OAIServiceUnavailableError} When service cannot be reached
+     * @throws {OAIServiceUnavailableError} When OAI service cannot be reached
      * @throws {OAITimeoutError} When request times out
      * @throws {OAITokenLimitError} When token limit is exceeded
      * @throws {OAIInvalidModelError} When model version is invalid
@@ -151,7 +151,7 @@ export async function infer(inputs: Message[]): Promise<Message[]> {
         const timeoutPromise = new Promise<never>((_, reject) => {
             setTimeout(() => {
                 reject(new OAITimeoutError());
-            }, TIMEOUT_DURATION);
+            }, TIMEOUT_MS);
         });
 
         // Race between the API call and timeout
@@ -231,5 +231,38 @@ export async function infer(inputs: Message[]): Promise<Message[]> {
             error instanceof Error ? error.message : "Unknown error occurred",
             "UNKNOWN_ERROR"
         );
+    }
+}
+
+
+export async function simpleInfer(inputs: Message[]): Promise<any> {
+    /**
+     * For testing purposes only.
+     * @param inputs - Message array
+     * @returns Output text or null if error occurs
+     */
+    try {
+        // Create a timeout promise
+        const timeoutPromise = new Promise<never>((_, reject) => {
+            setTimeout(() => {
+                reject(new OAITimeoutError());
+            }, 10000);
+        });
+
+        // Race between the API call and timeout
+        const response = await Promise.race([
+            oaiClient.responses.create({
+                model: OPENAI_MODEL || "gpt-4",
+                input: inputs,
+            }),
+            timeoutPromise,
+        ]);
+
+        // Parse and return the messages
+        return response.output_text; 
+
+    } catch (error) {
+        console.error(error);
+        return null;
     }
 }
